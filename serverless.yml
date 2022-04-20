@@ -1,0 +1,16 @@
+org: iraidamercedes
+app: glendid
+service: glendid
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.8
+
+functions:
+  hello:
+    handler: handlers/handler.hello
+    events:
+      - httpApi:
+          path: /
+          method: get
