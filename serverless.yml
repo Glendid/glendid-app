@@ -1,4 +1,4 @@
-org: iraidamercedes
+org: glendid
 app: glendid
 service: glendid
 frameworkVersion: '3'
@@ -43,7 +43,18 @@ functions:
       - http:
           path: /users/getUser
           method: get
-
+  deleteUser:
+    handler: handlers/DeleteUserHandler.deleteUser
+    events:
+      - http:
+          path: /users/deleteUser
+          method: put
+  upateUser:
+    handler: handlers/UpdateUserHandler.updateUser
+    events:
+      - http:
+          path: /users/updateUser
+          method: put
 resources:
   Resources:
     UsersDynamoDBTable:

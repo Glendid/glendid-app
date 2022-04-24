@@ -4,7 +4,7 @@ import os
 
 def getUsers(event, context):
 
-    # Instanciating connection objects with DynamoDB using boto3 dependency
+    #Instanciating connection objects with DynamoDB using boto3 dependency
     dynamodb = boto3.resource('dynamodb')
     client = boto3.client('dynamodb')
 
