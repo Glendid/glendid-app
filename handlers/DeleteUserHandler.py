@@ -5,9 +5,9 @@ import os
 def deleteUser(event, context):
 
     data = json.loads(event['body'])
-    if 'userId' not in data or 'active' not in data:
+    if 'documentNumber' not in data:
         logging.error("Validation Failed")
-        raise Exception("Couldn't delete the user item please specify the user id.")
+        raise Exception("Couldn't delete the user item please specify the document.")
         return
 
     #Instanciating connection objects with DynamoDB using boto3 dependency
@@ -22,10 +22,10 @@ def deleteUser(event, context):
 
         response = USERS_TABLE.update_item(
             Key={
-                "userId": data['userId'],
+                "documentNumber": data['documentNumber'],
             },
             ExpressionAttributeValues= {
-                ":a": data['active'],
+                ":a": 'false',
             },
             UpdateExpression= "set active = :a ",
             ReturnValues="UPDATED_NEW",

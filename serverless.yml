@@ -49,12 +49,7 @@ functions:
       - http:
           path: /users/deleteUser
           method: put
-  upateUser:
-    handler: handlers/UpdateUserHandler.updateUser
-    events:
-      - http:
-          path: /users/updateUser
-          method: put
+
 resources:
   Resources:
     UsersDynamoDBTable:
