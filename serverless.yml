@@ -1,16 +1,102 @@
-org: iraidamercedes
+org: glendid
 app: glendid
 service: glendid
 frameworkVersion: '3'
-
+custom:
+  tableName: 'users-table-${self:provider.stage}'
 provider:
   name: aws
   runtime: python3.8
+  stage: dev
+  region: us-east-1
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:DescribeTable
+      Resource:
+        - arn:aws:dynamodb:*:*:table/${self:custom.tableName}
+        - arn:aws:dynamodb:*:*:table/${self:custom.tableName}/index/*
+  environment:
+    USERS_TABLE: ${self:custom.tableName}
 
 functions:
-  hello:
-    handler: handlers/handler.hello
+  createUser:
+    handler: src/handlers/CreateUserHandler.create_user
     events:
-      - httpApi:
-          path: /
+      - http:
+          path: /users
+          method: post
+  getUsers:
+    handler: src/handlers/GetUsersHandler.get_users
+    events:
+      - http:
+          path: /users/list
+          method: post
+  updateUser:
+    handler: src/handlers/UpdateUserHandler.update_user
+    events:
+      - http:
+          path: /users/{id}
+          method: post
+  getUser:
+    handler: src/handlers/GetUserHandler.get_user
+    events:
+      - http:
+          path: /user/{id}
           method: get
+  deleteUser:
+    handler: src/handlers/DeleteUserHandler.delete_user
+    events:
+      - http:
+          path: /users/{id}
+          method: patch
+
+resources:
+  Resources:
+    UsersDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: userId
+            AttributeType: S
+          -
+            AttributeName: documentNumber
+            AttributeType: S
+          -
+            AttributeName: role
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: userId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: documentNumberIndex
+            KeySchema:
+              - AttributeName: documentNumber
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+          - IndexName: roleIndex
+            KeySchema:
+              - AttributeName: role
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+        TableName: ${self:custom.tableName}
