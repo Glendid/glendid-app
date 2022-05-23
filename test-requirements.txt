@@ -1,7 +1,4 @@
-boto3
-coverage
-jsonschema
-lambda-decorators
-moto
-pylint
-pytest
+coverage==6.4
+moto==3.1.9
+pylint==2.13.9
+pytest==7.1.2
