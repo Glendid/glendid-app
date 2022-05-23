@@ -1,0 +1,7 @@
+boto3
+coverage
+jsonschema
+lambda-decorators
+moto
+pylint
+pytest
