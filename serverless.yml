@@ -1,6 +1,6 @@
 org: glendid
-app: glendid
-service: glendid
+app: glendid-users
+service: glendid-users
 frameworkVersion: '3'
 custom:
   tableName: 'users-table-${self:provider.stage}'
@@ -14,7 +14,6 @@ provider:
     - Effect: Allow
       Action:
         - dynamodb:Query
-        - dynamodb:Scan
         - dynamodb:GetItem
         - dynamodb:PutItem
         - dynamodb:UpdateItem
