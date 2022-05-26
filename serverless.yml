@@ -24,7 +24,10 @@ provider:
         - arn:aws:dynamodb:*:*:table/${self:custom.tableName}/index/*
   environment:
     USERS_TABLE: ${self:custom.tableName}
-
+package:
+  exclude:
+    - '.idea/**'
+    - 'venv/**'
 functions:
   createUser:
     handler: src/handlers/CreateUserHandler.create_user
